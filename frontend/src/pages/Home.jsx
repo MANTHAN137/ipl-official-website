@@ -3,12 +3,27 @@ import { ArrowRight, Trophy, Star, TrendingUp, BarChart2, Camera, Loader } from 
 import { Link } from 'react-router-dom';
 
 const Home = () => {
-    const [photos, setPhotos] = useState([]);
-    const [loadingPhotos, setLoadingPhotos] = useState(true);
+    const [news, setNews] = useState([]);
+    const [loadingNews, setLoadingNews] = useState(true);
 
     useEffect(() => {
         fetchPhotos();
+        fetchNews();
     }, []);
+
+    const fetchNews = async () => {
+        try {
+            const response = await fetch('https://ipl-backend-s5rh.onrender.com/news');
+            const data = await response.json();
+            if (data.news) {
+                setNews(data.news);
+            }
+        } catch (error) {
+            console.error("Failed to fetch news:", error);
+        } finally {
+            setLoadingNews(false);
+        }
+    };
 
     const fetchPhotos = async () => {
         try {
@@ -84,45 +99,32 @@ const Home = () => {
                 )}
             </section>
 
-            {/* Latest Updates Grid */}
+            {/* Latest Updates Grid (AI Powered) */}
             <section className="container mx-auto">
                 <h2 className="text-3xl font-bold mb-8 flex items-center">
                     <Star className="mr-2 text-ipl-orange" /> Latest Updates
                 </h2>
-                <div className="grid md:grid-cols-3 gap-6">
-                    {[
-                        {
-                            title: "KKR lifts their 3rd Trophy",
-                            desc: "A dominant performance in the final against SRH seals the deal for Kolkata.",
-                            tag: "Finals 2024",
-                            color: "bg-purple-600"
-                        },
-                        {
-                            title: "Mega Auction 2025",
-                            desc: "Teams are gearing up for the biggest reshuffle in IPL history. Who goes where?",
-                            tag: "Auction",
-                            color: "bg-blue-600"
-                        },
-                        {
-                            title: "Emerging Player of the Season",
-                            desc: "Nitish Kumar Reddy takes home the emerging player award for his all-round show.",
-                            tag: "Awards",
-                            color: "bg-orange-600"
-                        }
-                    ].map((item, index) => (
-                        <div key={index} className="bg-ipl-card rounded-xl overflow-hidden card-hover border border-gray-700">
-                            <div className={`h-2 bg-gradient-to-r from-transparent via-white/20 to-transparent ${item.color}`}></div>
-                            <div className="p-6">
-                                <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">{item.tag}</span>
-                                <h3 className="text-xl font-bold mt-2 mb-3">{item.title}</h3>
-                                <p className="text-gray-400">{item.desc}</p>
-                                <button className="mt-4 text-ipl-orange font-medium hover:text-white transition-colors text-sm flex items-center">
-                                    Read More <ArrowRight className="h-4 w-4 ml-1" />
-                                </button>
+                {loadingNews ? (
+                    <div className="flex justify-center py-12">
+                        <Loader className="h-8 w-8 text-ipl-orange animate-spin" />
+                    </div>
+                ) : (
+                    <div className="grid md:grid-cols-3 gap-6">
+                        {news.map((item, index) => (
+                            <div key={index} className="bg-ipl-card rounded-xl overflow-hidden card-hover border border-gray-700 flex flex-col h-full">
+                                <div className={`h-2 bg-gradient-to-r from-transparent via-white/20 to-transparent ${item.color}`}></div>
+                                <div className="p-6 flex-1 flex flex-col">
+                                    <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">{item.tag}</span>
+                                    <h3 className="text-xl font-bold mt-2 mb-3">{item.title}</h3>
+                                    <p className="text-gray-400 flex-1">{item.desc}</p>
+                                    <a href={item.link} target="_blank" rel="noopener noreferrer" className="mt-4 text-ipl-orange font-medium hover:text-white transition-colors text-sm flex items-center">
+                                        Read More <ArrowRight className="h-4 w-4 ml-1" />
+                                    </a>
+                                </div>
                             </div>
-                        </div>
-                    ))}
-                </div>
+                        ))}
+                    </div>
+                )}
             </section>
 
             {/* Stats Preview */}

@@ -79,7 +79,70 @@ def get_photos():
 
     except Exception as e:
         print(f"Error scraping photos: {e}")
-        # Fallback to some placeholders if scraping fails
+        # Robust Fallback with multiple images
         return {"photos": [
-            {"src": "https://www.iplt20.com/assets/images/ipl-og-image-new.jpg", "alt": "IPL Logo"},
+            {"src": "https://www.iplt20.com/assets/images/ipl-og-image-new.jpg", "alt": "IPL Official"},
+            {"src": "https://documents.iplt20.com/ipl/IPLHeadlines/2024/260524/KKRvSRH_Final_Match_Report.jpg", "alt": "IPL Final Moments"},
+            {"src": "https://documents.iplt20.com/ipl/IPLHeadlines/2024/240524/Q2_SRHvRR_Match_Report.jpg", "alt": "Qualifier Action"},
+            {"src": "https://documents.iplt20.com/ipl/IPLHeadlines/2024/220524/Eliminator_RRvRCB_Match_Report.jpg", "alt": "Eliminator Thriller"},
+            {"src": "https://documents.iplt20.com/ipl/IPLHeadlines/2024/210524/Q1_KKRvSRH_Match_Report.jpg", "alt": "Playoff Intensity"},
+            {"src": "https://documents.iplt20.com/ipl/IPLHeadlines/2024/190524/Match_70_RRvKKR_Match_Report.jpg", "alt": "League Stage Finale"},
+        ]}
+
+@app.get("/news")
+async def get_news():
+    """
+    Generates 3 recent IPL news headlines using AI.
+    """
+    try:
+        prompt = """
+        Generate 3 exciting, recent (or realistic future 2025) news headlines for the IPL.
+        Return the data STRICTLY as a JSON array of objects.
+        
+        Each object should have:
+        - "title": A catchy headline.
+        - "desc": A short 1-sentence description.
+        - "tag": A category tag (e.g., "Auction", "Records", "Match Report").
+        - "color": A tailwind color class for the tag accent (e.g., "bg-blue-600", "bg-red-600", "bg-purple-600").
+        - "link": A realistic URL to an article (e.g., "https://www.iplt20.com/news/...").
+
+        Do not include any markdown formatting (like ```json). Just the raw JSON string.
+        """
+        
+        # We use a default provider (e.g., gemini) here. 
+        # In a real app, we might want to configure this more robustly.
+        response = await get_ai_response(prompt, "gemini")
+        
+        # Clean up potential markdown
+        clean_json = response.replace("```json", "").replace("```", "").strip()
+        
+        import json
+        news_items = json.loads(clean_json)
+        return {"news": news_items}
+
+    except Exception as e:
+        print(f"Error generating news: {e}")
+        # Fallback news
+        return {"news": [
+            {
+                "title": "IPL 2025 Schedule Announced",
+                "desc": "The BCCI has released the official schedule for the upcoming season.",
+                "tag": "Schedule",
+                "color": "bg-blue-600",
+                "link": "https://www.iplt20.com"
+            },
+            {
+                "title": "Mega Auction Date Set",
+                "desc": "Franchises prepare for the biggest auction in December.",
+                "tag": "Auction",
+                "color": "bg-yellow-600",
+                "link": "https://www.iplt20.com"
+            },
+            {
+                "title": "New Rules for Impact Player",
+                "desc": "Slight tweaks to the impact player rule to balance the game.",
+                "tag": "Rules",
+                "color": "bg-red-600",
+                "link": "https://www.iplt20.com"
+            }
         ]}
