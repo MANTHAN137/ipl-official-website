@@ -47,7 +47,7 @@ const TeamDetails = () => {
             
             Do not include any markdown formatting (like \`\`\`json). Just the raw JSON string.`;
 
-            const response = await fetch('http://localhost:8000/ask-ai', {
+            const response = await fetch('https://ipl-backend-s5rh.onrender.com/ask-ai', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -149,10 +149,10 @@ const TeamDetails = () => {
                                                 <td className="p-4 text-gray-300">{player.role}</td>
                                                 <td className="p-4">
                                                     <span className={`px-3 py-1 rounded-full text-xs font-medium ${player.current_team === team.name || player.current_team === teamId
-                                                            ? 'bg-green-900/30 text-green-400 border border-green-900'
-                                                            : player.current_team === 'Retired'
-                                                                ? 'bg-gray-700 text-gray-400'
-                                                                : 'bg-blue-900/30 text-blue-400 border border-blue-900'
+                                                        ? 'bg-green-900/30 text-green-400 border border-green-900'
+                                                        : player.current_team === 'Retired'
+                                                            ? 'bg-gray-700 text-gray-400'
+                                                            : 'bg-blue-900/30 text-blue-400 border border-blue-900'
                                                         }`}>
                                                         {player.current_team}
                                                     </span>

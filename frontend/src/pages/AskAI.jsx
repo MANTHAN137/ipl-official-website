@@ -30,7 +30,7 @@ const AskAI = () => {
         setIsLoading(true);
 
         try {
-            const response = await fetch('http://localhost:8000/ask-ai', {
+            const response = await fetch('https://ipl-backend-s5rh.onrender.com/ask-ai', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
