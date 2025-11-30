@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-ipl-dark text-white font-sans antialiased;
+  }
+}
+
+.ipl-gradient {
+  background: linear-gradient(135deg, #1e3a8a 0%, #f97316 100%);
+}
+
+.card-hover {
+  @apply transition-all duration-300 hover:scale-105 hover:shadow-xl;
+}
