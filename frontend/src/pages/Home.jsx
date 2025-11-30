@@ -1,8 +1,30 @@
-import React from 'react';
-import { ArrowRight, Trophy, Star, TrendingUp, BarChart2 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ArrowRight, Trophy, Star, TrendingUp, BarChart2, Camera, Loader } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Home = () => {
+    const [photos, setPhotos] = useState([]);
+    const [loadingPhotos, setLoadingPhotos] = useState(true);
+
+    useEffect(() => {
+        fetchPhotos();
+    }, []);
+
+    const fetchPhotos = async () => {
+        try {
+            // Using the deployed backend URL
+            const response = await fetch('https://ipl-backend-s5rh.onrender.com/photos');
+            const data = await response.json();
+            if (data.photos) {
+                setPhotos(data.photos);
+            }
+        } catch (error) {
+            console.error("Failed to fetch photos:", error);
+        } finally {
+            setLoadingPhotos(false);
+        }
+    };
+
     return (
         <div className="space-y-12 pb-12">
             {/* Hero Section */}
@@ -28,6 +50,38 @@ const Home = () => {
                         </Link>
                     </div>
                 </div>
+            </section>
+
+            {/* Dynamic Photo Gallery */}
+            <section className="container mx-auto">
+                <h2 className="text-3xl font-bold mb-8 flex items-center">
+                    <Camera className="mr-2 text-ipl-orange" /> Latest Moments
+                </h2>
+                {loadingPhotos ? (
+                    <div className="flex justify-center py-12">
+                        <Loader className="h-8 w-8 text-ipl-orange animate-spin" />
+                    </div>
+                ) : photos.length > 0 ? (
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        {photos.map((photo, index) => (
+                            <div key={index} className="relative group overflow-hidden rounded-xl aspect-video bg-gray-800">
+                                <img
+                                    src={photo.src}
+                                    alt={photo.alt}
+                                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                    onError={(e) => { e.target.src = 'https://www.iplt20.com/assets/images/ipl-og-image-new.jpg' }}
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                                    <p className="text-white text-sm font-medium line-clamp-2">{photo.alt}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="text-center py-12 text-gray-500 bg-gray-900/50 rounded-xl">
+                        Unable to load photos at the moment.
+                    </div>
+                )}
             </section>
 
             {/* Latest Updates Grid */}
