@@ -17,13 +17,16 @@ const Matches = () => {
         try {
             const prompt = `Generate a realistic list of the last 5 matches and the Final for the IPL 2025 season. 
             Return the data STRICTLY as a JSON array of objects.
+            
+            IMPORTANT SCENARIO: The 2025 IPL Final was won by Royal Challengers Bengaluru (RCB). Make sure the data reflects this.
+
             Each object should have:
             - "id": Number
             - "date": Date string (e.g., "May 26, 2025")
             - "team1": Team 1 Short Name (e.g., CSK)
             - "team2": Team 2 Short Name (e.g., MI)
             - "venue": Stadium Name
-            - "result": Match result (e.g., "CSK won by 20 runs")
+            - "result": Match result (e.g., "RCB won by 20 runs")
             - "status": "Completed" or "Upcoming"
             - "type": Match Type (e.g., "Final", "Qualifier 2", "Eliminator", "Match 70")
 
