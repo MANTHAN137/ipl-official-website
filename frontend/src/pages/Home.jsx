@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 const Home = () => {
     const [news, setNews] = useState([]);
     const [loadingNews, setLoadingNews] = useState(true);
+    const [photos, setPhotos] = useState([]);
+    const [loadingPhotos, setLoadingPhotos] = useState(true);
 
     useEffect(() => {
         fetchPhotos();
